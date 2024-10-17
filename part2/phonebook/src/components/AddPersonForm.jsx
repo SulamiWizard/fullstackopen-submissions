@@ -1,3 +1,5 @@
+import AddPersonFormInput from "./AddPersonFormInput";
+
 const AddPersonForm = ({
   persons,
   newName,
@@ -28,17 +30,24 @@ const AddPersonForm = ({
   };
 
   return (
-    <form onSubmit={addPerson}>
-      <div>
-        name: <input value={newName} onChange={handleNameChange} />
-      </div>
-      <div>
-        number: <input value={newNumber} onChange={handleNumberChange} />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
+    <div>
+      <h2>Add a person</h2>
+      <form onSubmit={addPerson}>
+        <AddPersonFormInput
+          placeholderText={"Name"}
+          value={newName}
+          handleOnChange={handleNameChange}
+        />
+        <AddPersonFormInput
+          placeholderText={"Number"}
+          value={newNumber}
+          handleOnChange={handleNumberChange}
+        />
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
   );
 };
 
