@@ -1,6 +1,6 @@
 import NumbersListElement from "./NumbersListElement";
 
-const NumbersList = ({ people, searchName }) => {
+const NumbersList = ({ people, searchName, setPersons }) => {
   const peopleToShow = searchName
     ? people.filter((person) =>
         person.name.toLowerCase().includes(searchName.toLowerCase()),
@@ -12,9 +12,10 @@ const NumbersList = ({ people, searchName }) => {
       <h2>Numbers</h2>
       {peopleToShow.map((person) => (
         <NumbersListElement
-          key={person.name}
-          name={person.name}
-          number={person.number}
+          key={person.id}
+          person={person}
+          people={people}
+          setPeople={setPersons}
         />
       ))}
     </div>

@@ -1,7 +1,16 @@
-const NumbersListElement = ({ name, number }) => {
+import peopleService from "../services/people";
+
+const NumbersListElement = ({ person, people, setPeople }) => {
+  const handleDeletion = () => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      setPeople(people.filter((p) => p.id !== person.id));
+      peopleService.remove(person.id);
+    }
+  };
   return (
     <div>
-      {name} {number}
+      {person.name} {person.number}{" "}
+      <button onClick={handleDeletion}>delete</button>
     </div>
   );
 };

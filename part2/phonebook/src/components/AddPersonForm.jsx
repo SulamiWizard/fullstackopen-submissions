@@ -1,4 +1,5 @@
 import AddPersonFormInput from "./AddPersonFormInput";
+import peopleService from "../services/people";
 
 const AddPersonForm = ({
   persons,
@@ -18,15 +19,58 @@ const AddPersonForm = ({
 
   const addPerson = (event) => {
     event.preventDefault();
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
+    // if (persons.some((person) => person.name === newName)) {
+    //   alert(`${newName} is already adde to phonebook`);
+    //   console.log(person.name);
+    //   return;
+    // }
+
+    // Check if person already exists
+    const personExists = persons.find((person) => person.name === newName);
+
+    // Prompt user for confirmation
+    if (personExists) {
+      const confirmUpdate = confirm(
+        `${newName} has already been added to the phonebook. Would you like to replace ${newName}'s number with ${newNumber}?`,
+      );
+
+      // Update the number if confirmed
+      if (confirmUpdate === true) {
+        const updatedPerson = { ...personExists, number: newNumber };
+        peopleService
+          .update(personExists.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== personExists.id ? person : returnedPerson,
+              ),
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            alert(
+              `The person '${newName}' was already removed from the server`,
+            );
+            setPersons(
+              persons.filter((person) => person.id !== personExists.id),
+            );
+          });
+      }
       return;
     }
-    const NameOject = { name: newName, number: newNumber };
-    setPersons(persons.concat(NameOject));
-    setNewName("");
-    setNewNumber("");
+
+    // Do nothing if denied
+    // Else add a new person to the database
+    const nameOject = {
+      name: newName,
+      number: newNumber,
+    };
+    peopleService.create(nameOject).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   return (
