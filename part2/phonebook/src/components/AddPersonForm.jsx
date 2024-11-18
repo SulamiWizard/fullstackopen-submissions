@@ -1,5 +1,6 @@
 import AddPersonFormInput from "./AddPersonFormInput";
 import peopleService from "../services/people";
+import Notification from "./Notification";
 
 const AddPersonForm = ({
   persons,
@@ -8,6 +9,10 @@ const AddPersonForm = ({
   setPersons,
   setNewName,
   setNewNumber,
+  notificationMessage,
+  setNotificationMessage,
+  isError,
+  setIsError,
 }) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -19,11 +24,6 @@ const AddPersonForm = ({
 
   const addPerson = (event) => {
     event.preventDefault();
-    // if (persons.some((person) => person.name === newName)) {
-    //   alert(`${newName} is already adde to phonebook`);
-    //   console.log(person.name);
-    //   return;
-    // }
 
     // Check if person already exists
     const personExists = persons.find((person) => person.name === newName);
@@ -45,10 +45,18 @@ const AddPersonForm = ({
                 person.id !== personExists.id ? person : returnedPerson,
               ),
             );
+            setIsError(false);
+            setNotificationMessage(
+              `Successfully updated ${newName}'s phone number`,
+            );
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 5000);
             setNewName("");
             setNewNumber("");
           })
           .catch((error) => {
+            console.log("FAIL");
             alert(
               `The person '${newName}' was already removed from the server`,
             );
@@ -68,6 +76,11 @@ const AddPersonForm = ({
     };
     peopleService.create(nameOject).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
+      setIsError(false);
+      setNotificationMessage(`Sucessfully added ${newName} to phonebook.`);
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
       setNewName("");
       setNewNumber("");
     });
@@ -76,6 +89,7 @@ const AddPersonForm = ({
   return (
     <div>
       <h2>Add a person</h2>
+      <Notification message={notificationMessage} isError={isError} />
       <form onSubmit={addPerson}>
         <AddPersonFormInput
           placeholderText={"Name"}

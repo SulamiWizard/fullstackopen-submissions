@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import people from "../services/people";
 
 import SearchBar from "./SearchBar";
 import AddPersonForm from "./AddPersonForm";
@@ -18,6 +17,9 @@ const Phonebook = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [numbersMessage, setNumbersMessage] = useState(null);
+  const [isError, setIsError] = useState(true);
 
   return (
     <div>
@@ -30,11 +32,19 @@ const Phonebook = () => {
         setPersons={setPersons}
         setNewName={setNewName}
         setNewNumber={setNewNumber}
+        notificationMessage={notificationMessage}
+        setNotificationMessage={setNotificationMessage}
+        isError={isError}
+        setIsError={setIsError}
       />
       <NumbersList
         people={persons}
         searchName={searchName}
         setPersons={setPersons}
+        notificationMessage={numbersMessage}
+        setNotificationMessage={setNumbersMessage}
+        isError={isError}
+        setIsError={setIsError}
       />
     </div>
   );
